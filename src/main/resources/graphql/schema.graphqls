@@ -1,0 +1,37 @@
+type Query {
+    accountsList: [Compte!]!
+    bankAccountById(id: ID!): Compte
+    customers: [Client!]!
+}
+
+type Mutation {
+    addAccount(compte: CompteInput!): Compte
+    updateAccount(id: ID!, compte: CompteInput!): Compte
+    deleteAccount(id: ID!): Boolean
+}
+
+type Compte {
+    id: ID!
+    solde: Float
+    devise: String
+    type: Typecompte
+    dateCreation: String
+    client: Client
+}
+
+type Client {
+    id: ID!
+    nom: String!
+    comptes: [Compte!]!
+}
+
+input CompteInput {
+    solde: Float
+    devise: String
+    type: Typecompte
+}
+
+enum Typecompte {
+    COURANT
+    EPARGNE
+}
