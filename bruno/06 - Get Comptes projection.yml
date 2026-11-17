@@ -1,0 +1,23 @@
+info:
+  name: 06 - Get Comptes projection
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{baseurl}}/comptes?projection=p1&page=0&size=2"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("La projection p1 limite les champs et la page contient deux comptes", function () {
+            expect(res.getStatus()).to.eql(200);
+            const comptes = res.getBody()._embedded.comptes;
+            expect(comptes).to.have.lengthOf(2);
+            for (const compte of comptes) {
+                expect(compte).to.include.keys("id", "solde", "type");
+                expect(compte).to.not.have.any.keys("dateCreation", "devise");
+            }
+        });

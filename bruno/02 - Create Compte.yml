@@ -1,0 +1,39 @@
+info:
+  name: 02 - Create Compte
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseurl}}/api/comptes"
+  body:
+    type: json
+    data: |
+      {
+        "solde": 12500.0,
+        "devise": "MAD",
+        "type": "EPARGNE"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.getStatus() === 201) {
+            bru.setVar("compteId", res.getBody().id);
+        }
+    - type: tests
+      code: |-
+        test("La création retourne 201 et génère un identifiant", function () {
+            expect(res.getStatus()).to.eql(201);
+            expect(res.getBody().id).to.be.a("string").and.not.be.empty;
+            expect(res.getBody().dateCreation).to.be.ok;
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

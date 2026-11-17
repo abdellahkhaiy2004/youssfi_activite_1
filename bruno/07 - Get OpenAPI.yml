@@ -1,0 +1,20 @@
+info:
+  name: 07 - Get OpenAPI
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: "{{baseurl}}/v3/api-docs"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("OpenAPI décrit les cinq opérations REST", function () {
+            expect(res.getStatus()).to.eql(200);
+            const paths = res.getBody().paths;
+            expect(paths["/api/comptes"]).to.include.keys("get", "post");
+            expect(paths["/api/comptes/{id}"]).to.include.keys("get", "put", "delete");
+        });

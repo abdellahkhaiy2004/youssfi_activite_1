@@ -1,0 +1,31 @@
+info:
+  name: 04 - Update Compte
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseurl}}/api/comptes/{{compteId}}"
+  body:
+    type: json
+    data: |
+      {
+        "solde": 0.0
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("La modification du solde conserve les champs omis", function () {
+            expect(res.getStatus()).to.eql(200);
+            expect(res.getBody()).to.include({ solde: 0, type: "EPARGNE", devise: "MAD" });
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
